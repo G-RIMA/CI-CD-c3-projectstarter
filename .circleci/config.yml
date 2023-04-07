@@ -32,8 +32,8 @@ commands:
           when: on_fail
           command: |
             # Curl command here to see if there was a successful migration associated with the workflow id, store result in SUCCESS variable
-            SUCCESS=$(curl --insecure https://kvdb.io/${KVDB_BUCKET}/migration_<<parameters.Workflow_ID>>)
-            if (( $SUCCESS == 1 ));
+            SUCCESS=$(curl --insecure https://kvdb.io/${KVDB_BUCKET}/migration_${CIRCLE_WORKFLOW_ID:0:7})
+            if (( $SUCCESS==1 ));
             then
               cd ~/project/backend
               npm install
@@ -431,6 +431,7 @@ jobs:
             fi
       # Here's where you will add some code to rollback on failure
       - destroy-environment
+          WorkFlow_ID: <<parameters
       - revert-migrations
 
   cloudfront-update:
